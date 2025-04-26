@@ -2,13 +2,18 @@ resource "kubernetes_secret" "wordpress_db" {
   metadata {
     name = "wordpress-db-secret"
   }
+
   data = {
     WORDPRESS_DB_HOST     = aws_db_instance.wordpress.endpoint
-    WORDPRESS_DB_USER     = aws_db_instance.wordpress.username
-    WORDPRESS_DB_PASSWORD = aws_db_instance.wordpress.password
+    WORDPRESS_DB_USER     = "administrador"
+    WORDPRESS_DB_PASSWORD = "admin123456789"
     WORDPRESS_DB_NAME     = "wordpress"
   }
+
+  depends_on = [aws_db_instance.wordpress]
 }
+
+
 
 resource "kubernetes_deployment" "wordpress" {
   metadata {
@@ -37,7 +42,7 @@ resource "kubernetes_deployment" "wordpress" {
       spec {
         container {
           name  = "wordpress"
-          image = "wordpress:php8.1-apache"
+          image = "bitnami/wordpress:latest" # Imagen estable
 
           env_from {
             secret_ref {
@@ -51,12 +56,12 @@ resource "kubernetes_deployment" "wordpress" {
 
           resources {
             limits = {
-              cpu    = "500m"
-              memory = "512Mi"
+              cpu    = "1000m"
+              memory = "1024Mi"
             }
             requests = {
-              cpu    = "250m"
-              memory = "256Mi"
+              cpu    = "500m"
+              memory = "512Mi"
             }
           }
         }
@@ -69,6 +74,7 @@ resource "kubernetes_deployment" "wordpress" {
     }
   }
 }
+
 
 resource "kubernetes_service" "wordpress" {
   metadata {

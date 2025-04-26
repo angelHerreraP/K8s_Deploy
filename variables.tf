@@ -23,13 +23,13 @@ variable "db_username" {
 }
 
 variable "allowed_cidr_blocks" {
-  description = "CIDR blocks allowed to access the WordPress LoadBalancer"
+  description = "CIDR blocks permitidos para acceder al LoadBalancer"
   type        = list(string)
-  default     = ["YOUR_IP/32"] # Replace with your IP or corporate CIDR
+  default     = ["0.0.0.0/0"]  # ¡Cambia esto en producción!
 }
 
 variable "enable_rds_encryption" {
-  description = "Enable encryption at rest for RDS"
+  description = "Habilita encryption at rest para RDS"
   type        = bool
   default     = true
 }
